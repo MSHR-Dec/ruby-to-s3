@@ -1,0 +1,23 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: direct
+spec:
+  template:
+    metadata:
+      labels:
+        app: direct
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: ruby
+          image: ruby-to-s3:latest
+          imagePullPolicy: Never
+          args:
+            - "logging:direct"
+          volumeMounts:
+            - mountPath: /var/log
+              name: log
+      volumes:
+        - name: log
+          emptyDir: {}
