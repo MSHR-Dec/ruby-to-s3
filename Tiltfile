@@ -6,6 +6,7 @@ docker_build(
     dockerfile='Dockerfile'
 )
 
-k8s_yaml('./k8s/configmap.yaml')
 k8s_yaml('./k8s/direct.yaml')
-k8s_yaml('./k8s/sidecar.yaml')
+k8s_yaml('./k8s/self-sidecar.yaml')
+k8s_yaml('./k8s/native-sidecar.yaml')
+k8s_yaml('./k8s/example.yaml')

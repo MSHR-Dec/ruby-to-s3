@@ -15,7 +15,17 @@ class Sidecar::Logging
         sleep 1
       }
 
-      # bucket.put_object(key: "sidecar/#{id}/stdout.log", body: File.open("/var/log/stdout-#{file_index}.log"))
+      # i = 1
+      # while true do
+      #   if i % 10 == 0
+      #     Sidecar::Logger.error(log_line)
+      #   else
+      #     Sidecar::Logger.info(log_line)
+      #   end
+      #
+      #   i += 1
+      #   sleep 10
+      # end
     end
   end
 end

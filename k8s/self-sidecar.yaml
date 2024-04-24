@@ -1,12 +1,12 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: sidecar
+  name: self-sidecar
 spec:
   template:
     metadata:
       labels:
-        app: sidecar
+        app: self-sidecar
     spec:
       restartPolicy: Never
       containers:
@@ -48,10 +48,6 @@ spec:
               value: "/host/proc"
             - name: SYSFS_ROOT
               value: "/host/sys"
-          ports:
-            - name: prom-exporter
-              containerPort: 9090
-              protocol: TCP
           volumeMounts:
             - name: data
               mountPath: "/vector-data-dir"
@@ -65,6 +61,36 @@ spec:
           emptyDir: {}
         - name: config
           configMap:
-            name: vector
+            name: self-vector
         - name: data
           emptyDir: {}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: self-vector
+data:
+  agent.yaml: |
+    data_dir: /vector-data-dir
+    api:
+      enabled: false
+      # address: 127.0.0.1:8686
+      # playground: false
+    sources:
+      file:
+        type: "file"
+        include: [ "/var/log/stdout.log" ]
+    sinks:
+      s3_archives:
+        inputs: ["file"]
+        type: "aws_s3"
+        region: "us-east-1"
+        bucket: "ruby-to-s3"
+        endpoint: "http://10.0.249.211:4566"
+        batch:
+          timeout_secs: 15
+        compression: "none"
+        key_prefix: "sidecar/1/%F"
+        filename_append_uuid: false
+        encoding:
+          codec: "text"
