@@ -5,7 +5,7 @@ class Direct::AwsS3
     resource = Aws::S3::Resource.new(
       credentials: Aws::Credentials.new("dummy", "dummy"),
       region: "us-east-1",
-      endpoint: "http://10.0.249.213:4566",
+      endpoint: "http://10.0.249.211:4566",
     )
     @bucket = resource.bucket("ruby-to-s3")
   end

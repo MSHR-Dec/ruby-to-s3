@@ -23,4 +23,3 @@ class Direct::Logging
     end
   end
 end
-
