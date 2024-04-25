@@ -1,0 +1,30 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: no-sidecar
+  labels:
+    app: no-sidecar
+    app.kubernetes.io/part-of: worker
+    mshr.dec/use-sidecar: "false"
+spec:
+  template:
+    metadata:
+      labels:
+        app: no-sidecar
+        app.kubernetes.io/part-of: worker
+        mshr.dec/use-sidecar: "false"
+    spec:
+      # shareProcessNamespace: true
+      restartPolicy: Never
+      containers:
+        - name: ruby
+          image: ruby-to-s3:latest
+          imagePullPolicy: Never
+          args:
+            - "logging:sidecar[false]"
+          volumeMounts:
+            - mountPath: /var/log
+              name: log
+      volumes:
+        - name: log
+          emptyDir: {}

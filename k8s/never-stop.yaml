@@ -2,13 +2,17 @@ apiVersion: batch/v1
 kind: Job
 metadata:
   name: never-stop
+  labels:
+    app: no-sidecar
+    app.kubernetes.io/part-of: worker
+    mshr.dec/use-sidecar: "true"
 spec:
   template:
     metadata:
       labels:
         app: never-stop
         app.kubernetes.io/part-of: worker
-        mshr.dec/use-sidecar: true
+        mshr.dec/use-sidecar: "true"
     spec:
       # shareProcessNamespace: true
       restartPolicy: Never
@@ -89,7 +93,7 @@ data:
         type: "aws_s3"
         region: "us-east-1"
         bucket: "ruby-to-s3"
-        endpoint: "http://10.0.249.215:4566"
+        endpoint: "http://10.0.249.211:4566"
         batch:
           timeout_secs: 60
         compression: "none"

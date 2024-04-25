@@ -2,13 +2,17 @@ apiVersion: batch/v1
 kind: Job
 metadata:
   name: native-sidecar
+  labels:
+    app: no-sidecar
+    app.kubernetes.io/part-of: worker
+    mshr.dec/use-sidecar: "false"
 spec:
   template:
     metadata:
       labels:
         app: native-sidecar
         app.kubernetes.io/part-of: worker
-        mshr.dec/use-sidecar: false
+        mshr.dec/use-sidecar: "false"
     spec:
       restartPolicy: Never
       containers:
@@ -90,7 +94,7 @@ data:
         type: "aws_s3"
         region: "us-east-1"
         bucket: "ruby-to-s3"
-        endpoint: "http://10.0.249.215:4566"
+        endpoint: "http://10.0.249.211:4566"
         batch:
           timeout_secs: 15
         compression: "none"
