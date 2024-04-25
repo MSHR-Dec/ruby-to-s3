@@ -7,6 +7,8 @@ spec:
     metadata:
       labels:
         app: native-sidecar
+        app.kubernetes.io/part-of: worker
+        mshr.dec/use-sidecar: false
     spec:
       restartPolicy: Never
       containers:
@@ -14,7 +16,7 @@ spec:
           image: ruby-to-s3:latest
           imagePullPolicy: Never
           args:
-            - "logging:sidecar"
+            - "logging:sidecar[false]"
           volumeMounts:
             - mountPath: /var/log
               name: log
@@ -88,7 +90,7 @@ data:
         type: "aws_s3"
         region: "us-east-1"
         bucket: "ruby-to-s3"
-        endpoint: "http://10.0.249.211:4566"
+        endpoint: "http://10.0.249.215:4566"
         batch:
           timeout_secs: 15
         compression: "none"

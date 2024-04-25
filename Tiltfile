@@ -9,4 +9,5 @@ docker_build(
 k8s_yaml('./k8s/direct.yaml')
 k8s_yaml('./k8s/self-sidecar.yaml')
 k8s_yaml('./k8s/native-sidecar.yaml')
+k8s_yaml('./k8s/never-stop.yaml')
 k8s_yaml('./k8s/example.yaml')

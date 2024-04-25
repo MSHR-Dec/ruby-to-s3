@@ -1,12 +1,12 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: self-sidecar
+  name: never-stop
 spec:
   template:
     metadata:
       labels:
-        app: self-sidecar
+        app: never-stop
         app.kubernetes.io/part-of: worker
         mshr.dec/use-sidecar: true
     spec:
@@ -17,7 +17,7 @@ spec:
           image: ruby-to-s3:latest
           imagePullPolicy: Never
           args:
-            - "logging:sidecar[true]"
+            - "logging:sidecar[false]"
           volumeMounts:
             - mountPath: /var/log
               name: log
@@ -64,14 +64,14 @@ spec:
           emptyDir: {}
         - name: config
           configMap:
-            name: self-vector
+            name: never-stop
         - name: data
           emptyDir: {}
 ---
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: self-vector
+  name: never-stop
 data:
   agent.yaml: |
     data_dir: /vector-data-dir
@@ -93,7 +93,7 @@ data:
         batch:
           timeout_secs: 60
         compression: "none"
-        key_prefix: "sidecar/1/%F"
+        key_prefix: "sidecar/100/%F"
         filename_append_uuid: false
         encoding:
           codec: "text"

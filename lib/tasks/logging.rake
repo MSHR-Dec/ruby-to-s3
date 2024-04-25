@@ -7,7 +7,7 @@ namespace :logging do
   end
 
   desc "let sidecar help to send logs to s3"
-  task sidecar: :environment do
-    Sidecar::Logging.run
+  task :sidecar, [:oneshot] => :environment do |_, args|
+    Sidecar::Logging.run(args[:oneshot])
   end
 end
