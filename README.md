@@ -1,11 +1,15 @@
 # README
 
 ```bash
-k get pods -l "app.kubernetes.io/part-of=worker,mshr.dec/use-sidecar=true" -o json | \
-jq '.items[] |
-    select(.status.containerStatuses[].name == "ruby") |
-    select(.status.containerStatuses[].ready == false) |
-    .metadata.labels | .["batch.kubernetes.io/job-name"]'
+kubectl get pods \
+--selector "app.kubernetes.io/part-of=worker,mshr.dec/use-sidecar=true" \
+--field-selector status.phase==Running \
+-o=jsonpath="{range .items[?(@.status.containerStatuses[0].state.terminated.finishedAt <= '"$(date -v -60S '+%Y-%m-%dT%H:%M:%SZ')"')]}\
+{.metadata.labels.batch\.kubernetes\.io/job-name}{'\t'}\
+{.status.containerStatuses[0].ready}{'\t'}\
+{.status.containerStatuses[1].ready}{'\n'}\
+{end}" \
+| awk '{if($2 == "false" && $3 == "true") print $1}'
 ```
 
 This README would normally document whatever steps are necessary to get the

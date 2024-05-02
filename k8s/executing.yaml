@@ -1,7 +1,7 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: never-stop
+  name: executing
   labels:
     app: no-sidecar
     app.kubernetes.io/part-of: worker
@@ -10,7 +10,7 @@ spec:
   template:
     metadata:
       labels:
-        app: never-stop
+        app: executing
         app.kubernetes.io/part-of: worker
         mshr.dec/use-sidecar: "true"
     spec:
@@ -68,14 +68,14 @@ spec:
           emptyDir: {}
         - name: config
           configMap:
-            name: never-stop
+            name: executing
         - name: data
           emptyDir: {}
 ---
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: never-stop
+  name: executing
 data:
   agent.yaml: |
     data_dir: /vector-data-dir
@@ -93,7 +93,7 @@ data:
         type: "aws_s3"
         region: "us-east-1"
         bucket: "ruby-to-s3"
-        endpoint: "http://10.0.249.211:4566"
+        endpoint: "http://10.0.249.215:4566"
         batch:
           timeout_secs: 60
         compression: "none"

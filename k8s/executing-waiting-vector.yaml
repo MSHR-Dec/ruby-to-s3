@@ -1,7 +1,7 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: self-sidecar
+  name: executing-waiting-vector
   labels:
     app: no-sidecar
     app.kubernetes.io/part-of: worker
@@ -10,7 +10,7 @@ spec:
   template:
     metadata:
       labels:
-        app: self-sidecar
+        app: executing-waiting-vector
         app.kubernetes.io/part-of: worker
         mshr.dec/use-sidecar: "true"
     spec:
@@ -21,7 +21,7 @@ spec:
           image: ruby-to-s3:latest
           imagePullPolicy: Never
           args:
-            - "logging:sidecar[true]"
+            - "logging:sidecar[false]"
           volumeMounts:
             - mountPath: /var/log
               name: log
@@ -63,19 +63,25 @@ spec:
               readOnly: true
             - name: log
               mountPath: /var/log
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: 8686
+            initialDelaySeconds: 1
+            periodSeconds: 3
       volumes:
         - name: log
           emptyDir: {}
         - name: config
           configMap:
-            name: self-vector
+            name: executing-waiting-vector
         - name: data
           emptyDir: {}
 ---
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: self-vector
+  name: executing-waiting-vector
 data:
   agent.yaml: |
     data_dir: /vector-data-dir
@@ -93,11 +99,11 @@ data:
         type: "aws_s3"
         region: "us-east-1"
         bucket: "ruby-to-s3"
-        endpoint: "http://10.0.249.211:4566"
+        endpoint: "http://10.0.249.215:4566"
         batch:
           timeout_secs: 60
         compression: "none"
-        key_prefix: "sidecar/1/%F"
+        key_prefix: "sidecar/120/%F"
         filename_append_uuid: false
         encoding:
           codec: "text"
