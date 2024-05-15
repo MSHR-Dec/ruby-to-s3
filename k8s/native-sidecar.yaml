@@ -35,9 +35,9 @@ spec:
             - name: AWS_REGION
               value: us-west-2
             - name: AWS_ACCESS_KEY_ID
-              value: dummy
+              value: minioadmin
             - name: AWS_SECRET_ACCESS_KEY
-              value: dummy
+              value: minioadmin
             - name: VECTOR_LOG
               value: "info"
             - name: VECTOR_SELF_NODE_NAME
@@ -94,7 +94,7 @@ data:
         type: "aws_s3"
         region: "us-east-1"
         bucket: "ruby-to-s3"
-        endpoint: "http://10.0.249.211:4566"
+        endpoint: "http://10.0.249.211:14566"
         batch:
           timeout_secs: 15
         compression: "none"

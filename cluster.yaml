@@ -7,7 +7,6 @@ apiVersion: ctlptl.dev/v1alpha1
 kind: Cluster
 name: kind-ruby-to-s3-dev
 product: kind
-kubernetesVersion: v1.28.7
 registry: ruby-to-s3-registry
 kindV1Alpha4Cluster:
   nodes:

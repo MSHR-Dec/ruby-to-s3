@@ -1,15 +1,29 @@
 services:
-  localstack:
-    image: localstack/localstack:3.0.2
+#  localstack:
+#    image: localstack/localstack:3.0.2
+#    environment:
+#      - SERVICES=sqs,s3
+#      - USE_SINGLE_REGION=1
+#      - AWS_DEFAULT_REGION=ap-northeast-1
+#      - PERSISTENCE=1
+#    volumes:
+#      - ./docker/localstack/init/ready.d:/etc/localstack/init/ready.d
+#      - localstack-data:/var/lib/localstack:delegated
+#    ports:
+#      - 4566:4566
+  minio:
+    image: minio/minio:latest
+    container_name: minio
     environment:
-      - SERVICES=sqs,s3
-      - USE_SINGLE_REGION=1
-      - AWS_DEFAULT_REGION=ap-northeast-1
-      - PERSISTENCE=1
+      MINIO_ACCESS_KEY: minioadmin
+      MINIO_SECRET_KEY: minioadmin
+    entrypoint: sh
+    command: -c 'mkdir -p /data/ruby-to-s3 && minio server /data --address :14566 --console-address :9000'
     volumes:
-      - ./docker/localstack/init/ready.d:/etc/localstack/init/ready.d
-      - localstack-data:/var/lib/localstack:delegated
+      - minio-data:/data
     ports:
-      - 4566:4566
+      - '14566:14566'
+      - '9000:9000'
 volumes:
   localstack-data:
+  minio-data:
